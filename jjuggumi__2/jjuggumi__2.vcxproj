@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,7 +131,7 @@
     <ClCompile Include="canvas.c" />
     <ClCompile Include="jjuggumi.c" />
     <ClCompile Include="keyin.c" />
-    <ClCompile Include="sample.c" />
+    <ClCompile Include="nightgame.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="canvas.h" />
@@ -138,7 +139,7 @@
     <ClInclude Include="keyin.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Downloads\jjuggumi_v0\jjuggumi.dat" />
+    <None Include="jjuggumi.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

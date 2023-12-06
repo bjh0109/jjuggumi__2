@@ -24,7 +24,7 @@
     <ClCompile Include="keyin.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="sample.c">
+    <ClCompile Include="nightgame.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -40,7 +40,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\Downloads\jjuggumi_v0\jjuggumi.dat">
+    <None Include="jjuggumi.dat">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>
