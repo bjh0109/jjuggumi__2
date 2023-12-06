@@ -73,15 +73,15 @@ void print_status(void) {
 	printf("no. of players left: %d\n", n_player);
 	for (int i = 0; i < n_player; i++) {
 		if (player[i].hasitem == TRUE) {
-			printf("player %s: %d %d %d  item: %s\n", player[i].name, player[i].intel, player[i].str, player[i].stamina,player[i].item.name);
+			printf("player %s: %d   %d   %d  item: %s         \n", player[i].name, player[i].intel, player[i].str, player[i].stamina,player[i].item.name);
 		}
 		else {
-			printf("player %s: %d %d %d                    \n", player[i].name, player[i].intel, player[i].str, player[i].stamina);
+			printf("player %s: %d   %d  %d                    \n", player[i].name, player[i].intel, player[i].str, player[i].stamina);
 		}
 		
 	}
 	for (int i = 0; i < 4; i++) {
-		printf("name: %s  intel_buf: %d  str_buf: %d  stamina_buf: %d\n", use_item[i].name,use_item[i].intel_buf, use_item[i].str_buf,use_item[i].stamina_buf);
+		printf("name: %s  intel_buf: %d   str_buf: %d   stamina_buf: %d         \n", use_item[i].name,use_item[i].intel_buf, use_item[i].str_buf,use_item[i].stamina_buf);
 	}
 	
 }
