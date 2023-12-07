@@ -18,7 +18,7 @@
 #define K_X			'x'
 #define K_D			'.'
 #define K_UNDEFINED	'\0'
-
+#define K_SPACE     32
 typedef int key_t;
 
 key_t get_key(void);
