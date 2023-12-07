@@ -10,6 +10,7 @@
 
 void draw(void);
 void print_status(void);
+void print_status_1(void);
 
 // (zero-base) row행, col열로 커서 이동
 void gotoxy(int row, int col) {
@@ -53,11 +54,68 @@ bool placable(int row, int col) {
 	return true;
 }
 
+bool placable_jul(int y) {
+	if (n_player == 2) {
+		if (y == 16 || y == 24) {
+			return false;
+		}
+	}
+	else if (n_player == 3) {
+		if (y == 15 || y == 24) {
+			return false;
+		}
+	}
+	else if (n_player == 4) {
+		if (y == 15 || y == 25) {
+			return false;
+		}
+	}
+	else if (n_player == 5) {
+		if (y == 14 || y == 25) {
+			return false;
+		}
+	}
+	else if (n_player == 6) {
+		if (y == 14 || y == 26) {
+			return false;
+		}
+	}
+	else if (n_player == 7) {
+		if (y == 13 || y == 26) {
+			return false;
+		}
+	}
+	else if (n_player == 8) {
+		if (y == 13 || y == 27) {
+			return false;
+		}
+	}
+	else if (n_player == 9) {
+		if (y == 12 || y == 27) {
+			return false;
+		}
+	}
+	else if (n_player == 10) {
+		if (y == 12 || y == 28) {
+			return false;
+		}
+	}
+	else {
+		return true;
+	}
+}
+
 // 상단에 맵을, 하단에는 현재 상태를 출력
 void display(void) {
 	draw();
 	gotoxy(N_ROW + 4, 0);  // 추가로 표시할 정보가 있으면 맵과 상태창 사이의 빈 공간에 출력
 	print_status();
+}
+
+void display_1(void) {
+	draw();
+	gotoxy(N_ROW + 4, 0);  // 추가로 표시할 정보가 있으면 맵과 상태창 사이의 빈 공간에 출력
+	print_status_1();
 }
 
 void draw(void) {
@@ -76,18 +134,28 @@ void print_status(void) {
 	printf("번호   살아있는가 이름 지능 힘 스테미나  \n");
 	for (int i = 0; i < n_player; i++) {
 		if (player[i].hasitem == TRUE) {
-			printf("player[%d] %5s %5s: %2d  %2d  %3d item: %5s   \n",i, player[i].is_alive ? "alive" : "DEAD" ,player[i].name, player[i].intel, player[i].str, player[i].stamina,player[i].item.name);
+			printf("player[%d] %5s %5s: %2d  %2d  %3.1f item: %5s   \n",i, player[i].is_alive ? "alive" : "DEAD" ,player[i].name, player[i].intel, player[i].str, player[i].stamina,player[i].item.name);
 		}
 		else {
-			printf("player[%d] %5s %5s:  %2d  %2d  %3d      \n",i, player[i].is_alive ? "alive" : "DEAD", player[i].name, player[i].intel, player[i].str, player[i].stamina);
+			printf("player[%d] %5s %5s:  %2d  %2d  %3.1f      \n",i, player[i].is_alive ? "alive" : "DEAD", player[i].name, player[i].intel, player[i].str, player[i].stamina);
 		}
 		
 	}
 	for (int i = 0; i < 4; i++) {
 		printf("name: %s  intel_buf: %d   str_buf: %d   stamina_buf: %d         \n", use_item[i].name,use_item[i].intel_buf, use_item[i].str_buf,use_item[i].stamina_buf);
 	}
-	
 }
+
+void print_status_1(void) {
+	printf("no. of players left: %d\n", n_alive);
+	for (int p = 0; p < n_player; p++) {
+		if (player[p].is_alive || jul_fal[p] == true) {
+			printf("player %2d: %5s %d(+%d) %d(+%d) %.1f(%d)\n",
+				p, player[p].is_alive ? "alive" : jul_fal[p] ? "alive*" : "DEAD", player[p].intel, player[p].item.intel_buf, player[p].str, player[p].item.str_buf, player[p].stamina, player[p].item.stamina_buf);
+		}
+	}
+}
+
 
 void kill_player_num(int kill_num[]) {
 	for (int j = 0; j < n_player; j++) {
