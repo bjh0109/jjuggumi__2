@@ -14,7 +14,8 @@ bool is_valid(key_t key) {
 		K_Z,
 		K_S,
 		K_X,
-		K_D
+		K_D,
+		K_SPACE
 	};
 
 	for (int i = 0; i < N_KEY; i++) {

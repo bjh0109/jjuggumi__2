@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="canvas.c" />
+    <ClCompile Include="jebi.c" />
     <ClCompile Include="jjuggumi.c" />
     <ClCompile Include="juldarigi.c" />
     <ClCompile Include="keyin.c" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="canvas.h" />
+    <ClInclude Include="jebi.h" />
     <ClInclude Include="jjuggumi.h" />
     <ClInclude Include="keyin.h" />
   </ItemGroup>
