@@ -31,6 +31,9 @@ void status_pluse(int i,int j) {
 		player[j].intel = player[j].intel + use_item[i].intel_buf;
 		player[j].str = player[j].str + use_item[i].str_buf;
 		player[j].stamina = player[j].stamina + use_item[i].stamina_buf;
+		if (player[j].stamina > 100) {
+			player[j].stamina = 100;
+		}
 	}
 }
 void status_subtraction(int i, int j) {
@@ -44,9 +47,9 @@ void status_subtraction(int i, int j) {
 
 void select_1(int num, int j,int i) {
 	if (num == 1 && ask_num[i] == FALSE) {
-		//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
+		//강탈 선택시 유효힘 비교 (스테미나가 0보다 크면) 
 		if (player[j].stamina > 0) {
-			if (player[j].str > player[i].str) {
+			if (player[j].str* (player[j].stamina/100) > player[i].str * (player[i].stamina / 100)) {
 				//성공
 				//플레이어가 아이템이 있으면 
 				if (player[j].hasitem == TRUE) {
@@ -98,7 +101,7 @@ void select_1(int num, int j,int i) {
 			}
 			else {//실패
 				player[j].stamina = player[j].stamina - 60;
-				printf("힘부족");
+				printf("유효 힘부족");
 				ask_num[i] = TRUE;
 			}
 		}
@@ -110,7 +113,7 @@ void select_1(int num, int j,int i) {
 	else if (num == 2 && ask_num[i] == FALSE) {
 		//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
 		if (player[j].stamina > 0) {
-			if (player[j].intel > player[i].intel) {
+			if (player[j].intel * (player[j].stamina / 100) > player[i].intel * (player[i].stamina / 100)) {
 				//성공
 				//플레이어가 아이템이 있으면 
 				if (player[j].hasitem == TRUE) {
@@ -162,7 +165,7 @@ void select_1(int num, int j,int i) {
 			}
 			else {//실패
 				player[j].stamina = player[j].stamina - 40;
-				printf("지능부족");
+				printf("유효지능부족");
 				ask_num[i] = TRUE;
 			}
 		}
@@ -439,9 +442,12 @@ void nightgame(void) {
 		display();
 		Sleep(10);
 		tick += 10;
-		for (int i = 0; i < 6; i++) {
-			if (tick==10000) {
-				end_point += 1;
+		if (tick==10000) {
+			end_point += 1;
+		}
+		if (tick == 9000) {
+			for (int i = 0; i < n_player; i++) {
+				player[i].stamina = player[i].stamina + 40;
 			}
 		}
 		if (end_point > 0) {
