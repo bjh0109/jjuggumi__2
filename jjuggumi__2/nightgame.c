@@ -335,20 +335,29 @@ void ITEM_random(void) {
 }
 
 void sample_init(void) {
+
+	for (int i = 0; i < PLAYER_MAX; i++) {
+			px[i] = -1;
+			py[i] = -1;
+		
+	}
+
 	map_init(8, 25);
 	int x, y;
-	for (int i = 0; i < n_player; i++) {
-		// 같은 자리가 나오면 다시 생성
-		do {
-			x = randint(1, N_ROW - 2);
-			y = randint(1, N_COL - 2);
-		} while (!placable(x, y));
-		px[i] = x;
-		py[i] = y;
-		period[i] = randint(100, 150);
 
-		back_buf[px[i]][py[i]] = '0' + i;  // (0 .. n_player-1)
-		
+	for (int i = 0; i < n_player; i++) {
+		if (player[i].is_alive == TRUE) {
+			// 같은 자리가 나오면 다시 생성
+			do {
+				x = randint(1, N_ROW - 2);
+				y = randint(1, N_COL - 2);
+			} while (!placable(x, y));
+			px[i] = x;
+			py[i] = y;
+			period[i] = randint(100, 150);
+
+			back_buf[px[i]][py[i]] = '0' + i;  // (0 .. n_player-1)
+		}
 	}
 
 	tick = 0;
@@ -380,18 +389,19 @@ void move_manual(key_t key) {
 }
 
 // 0 <= dir < 4가 아니면 랜덤
-void move_random(int player, int dir) {
-	int p = player;  // 이름이 길어서...
+void move_random(int p, int dir) {
 	int nx, ny;  // 움직여서 다음에 놓일 자리
 
 	// 움직일 공간이 없는 경우는 없다고 가정(무한 루프에 빠짐)	
+	
+	if (player[p].is_alive) {
+		do {
+			nx = px[p] + randint(-1, 1);
+			ny = py[p] + randint(-1, 1);
+		} while (!placable(nx, ny));
 
-	do {
-		nx = px[p] + randint(-1, 1);
-		ny = py[p] + randint(-1, 1);
-	} while (!placable(nx, ny));
-
-	move_tail(p, nx, ny);
+		move_tail(p, nx, ny);
+	}
 }
 
 // back_buf[][]에 기록

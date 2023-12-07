@@ -27,6 +27,12 @@
     <ClCompile Include="nightgame.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="mugunghwa.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="juldarigi.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="canvas.h">
