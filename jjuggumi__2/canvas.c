@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <Windows.h>
@@ -87,6 +89,79 @@ void print_status(void) {
 	
 }
 
+void kill_player_num(int kill_num[]) {
+	for (int j = 0; j < n_player; j++) {
+		if (kill_num[j] != -1) {
+			printf("%d번 ", kill_num[j]);
+		}
+	}
+}
+
+
+
+
 void dialog(char message[]) {
-	
+	// 현재 버퍼 상태 저장
+	char temp_buf[ROW_MAX][COL_MAX];
+	int center_row = N_ROW / 2;
+	int center_col = N_COL / 2;
+	int msg_length = strlen(message);
+	int box_width = max(msg_length, 18) + 4;
+	int box_start_col = center_col - box_width / 2;
+	int box_end_col = center_col + box_width / 2;
+
+
+	memcpy(temp_buf, back_buf, sizeof(back_buf));
+
+	// 대화 상자를 한 번만 표시
+	for (int i = DIALOG_DURATION_SEC; i >= 0; --i) {
+		if (i != DIALOG_DURATION_SEC) {
+			Sleep(1000);
+		}
+
+		for (int row = center_row - 2; row <= center_row + 2; ++row) {
+			for (int col = box_start_col - 2; col <= box_end_col; ++col) {
+				back_buf[row][col] = ' ';
+			}
+		}
+		for (int row = center_row - 2; row <= center_row + 2; ++row) {
+			for (int col = box_start_col - 2; col <= box_end_col; ++col) {
+				if (row == center_row - 2 || row == center_row + 2 || col == box_start_col - 2 || col == box_end_col)
+					back_buf[row][col] = '*';
+			}
+		}
+
+
+
+		gotoxy(center_row, box_start_col + 3);
+		printf("%s", message);
+		gotoxy(center_row, box_start_col + 1);
+		printf("%d ", i);
+
+		gotoxy(center_row + 1, box_start_col + 3);
+		kill_player_num(kill_player_1);
+
+		draw();
+	}
+
+
+	gotoxy(center_row, box_start_col + 1);
+
+	for (int disappear = 0; disappear < msg_length + 2; disappear++) {
+		printf(" ");
+	}
+
+	gotoxy(center_row + 1, 2);
+	for (int disappear = 0; disappear < 20; disappear++) {
+		printf(" ");
+	}
+
+	// 원래 상태로 복구
+	for (int i = 0; i < ROW_MAX; i++) {
+		for (int j = 0; j < COL_MAX; j++) {
+			back_buf[i][j] = temp_buf[i][j];
+		}
+	}
+
+	display();
 }
