@@ -17,6 +17,7 @@ void move_random(int i, int dir);
 void move_tail(int i, int nx, int ny);
 void status_pluse(int i,int j);
 void status_subtraction(int i, int j);
+void select_1(int, int, int);
 
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 int ix[ITEM_MAX], iy[ITEM_MAX];
@@ -39,6 +40,145 @@ void status_subtraction(int i, int j) {
 		player[j].stamina = player[j].stamina - use_item[i].stamina_buf;
 	}
 }
+
+
+void select_1(int num, int j,int i) {
+	if (num == 1 && ask_num[i] == FALSE) {
+		//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
+		if (player[j].stamina > 0) {
+			if (player[j].str > player[i].str) {
+				//성공
+				//플레이어가 아이템이 있으면 
+				if (player[j].hasitem == TRUE) {
+					//상대가 아이템이 있을때
+					if (player[i].hasitem == TRUE) {
+						player[j].stamina = player[j].stamina - 40;
+
+						status_subtraction(copy_item_num[j], j);
+						status_subtraction(copy_item_num[i], i);
+						//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
+						use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
+
+						//먹은 아이템을 플레이어가 가진 아이템으로 변경
+						use_item[copy_item_num[i]] = player[j].item;
+
+						//플레이어의 아이템을 변경
+						player[j].item = use_item[copy_item_num[j]];
+						player[i].item = use_item[copy_item_num[i]];
+						status_pluse(copy_item_num[j], j);
+						status_pluse(copy_item_num[i], i);
+
+					}
+					//상대가 아이템이 없을때
+					else {
+						printf("교환 실패");
+						ask_num[i] = TRUE;
+					}
+				}
+				//플레이어 아이템이 없으면
+				else if ((player[j].hasitem == FALSE)) {
+					//상대가 아이템이 있을때
+					if (player[i].hasitem == TRUE) {
+						status_subtraction(copy_item_num[i], i);
+						copy_item_num[j] = copy_item_num[i];
+						player[i].hasitem = FALSE;
+						player[j].hasitem = TRUE;
+						player[j].item = use_item[copy_item_num[j]];
+						player[j].stamina = player[j].stamina - 40;
+						status_pluse(copy_item_num[j], j);
+						printf("강탈 성공");
+						ask_num[i] = TRUE;
+					}
+					//상대가 아이템이 없을때
+					else {
+						printf("강탈 실패");
+						ask_num[i] = TRUE;
+					}
+				}
+			}
+			else {//실패
+				player[j].stamina = player[j].stamina - 60;
+				printf("힘부족");
+				ask_num[i] = TRUE;
+			}
+		}
+		else {
+			printf("스테미나 부족");
+			ask_num[i] = TRUE;
+		}
+	}
+	else if (num == 2 && ask_num[i] == FALSE) {
+		//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
+		if (player[j].stamina > 0) {
+			if (player[j].intel > player[i].intel) {
+				//성공
+				//플레이어가 아이템이 있으면 
+				if (player[j].hasitem == TRUE) {
+					//상대가 아이템이 있을때
+					if (player[i].hasitem == TRUE) {
+						player[j].stamina = player[j].stamina - 20;
+
+						status_subtraction(copy_item_num[j], j);
+						status_subtraction(copy_item_num[i], i);
+						//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
+						use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
+
+						//먹은 아이템을 플레이어가 가진 아이템으로 변경
+						use_item[copy_item_num[i]] = player[j].item;
+
+						//플레이어의 아이템을 변경
+						player[j].item = use_item[copy_item_num[j]];
+						player[i].item = use_item[copy_item_num[i]];
+						status_pluse(copy_item_num[j], j);
+						status_pluse(copy_item_num[i], i);
+
+					}
+					//상대가 아이템이 없을때
+					else {
+						printf("교환 실패");
+						ask_num[i] = TRUE;
+					}
+				}
+				//플레이어 아이템이 없으면
+				else if ((player[j].hasitem == FALSE)) {
+					//상대가 아이템이 있을때
+					if (player[i].hasitem == TRUE) {
+						status_subtraction(copy_item_num[i], i);
+						copy_item_num[j] = copy_item_num[i];
+						player[i].hasitem = FALSE;
+						player[j].hasitem = TRUE;
+						player[j].item = use_item[copy_item_num[j]];
+						player[j].stamina = player[j].stamina - 20;
+						status_pluse(copy_item_num[j], j);
+						printf("강탈 성공");
+						ask_num[i] = TRUE;
+					}
+					//상대가 아이템이 없을때
+					else {
+						printf("강탈 실패");
+						ask_num[i] = TRUE;
+					}
+				}
+			}
+			else {//실패
+				player[j].stamina = player[j].stamina - 40;
+				printf("지능부족");
+				ask_num[i] = TRUE;
+			}
+		}
+		else {
+			printf("스테미나 부족");
+			ask_num[i] = TRUE;
+		}
+	}
+	else {
+		printf("무시하기");
+		ask_num[i] = TRUE;
+	}
+
+	
+}
+
 
 
 void ITEM_USE(void) {
@@ -117,641 +257,49 @@ void player_adjacency(void) {
 			if (px[j] == px[i] && py[j] == py[i] + 1 || px[j] == px[i] + 1 && py[j] == py[i] 
 				|| px[j] == px[i] - 1 && py[j] == py[i]  || px[j] == px[i] && py[j] == py[i] - 1 ) {
 				
-				if (j == 0 && ask_num[i]==FALSE) {
+				if (j == 0 && ask_num[i]==FALSE ) {
 					//내가 조종하는 플레이어랑 마주치면
 					gotoxy(N_ROW + 2, 0);
 					printf(" %d번 %d랑 마주침 (1번 강탈, 2번 회유 3번 무시): ",j,i);
 					scanf_s("%d", &num);
-
-					if (num == 1) {
-						//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-						if (player[j].stamina>0) {
-							if (player[j].str > player[i].str) {
-								//성공
-								//플레이어가 아이템이 있으면 
-								if (player[j].hasitem == TRUE) {
-									//상대가 아이템이 있을때
-									if (player[i].hasitem == TRUE) {
-										player[j].stamina = player[j].stamina - 40;
-
-										status_subtraction(copy_item_num[j], j);
-										status_subtraction(copy_item_num[i], i);
-										//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-										use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
-
-										//먹은 아이템을 플레이어가 가진 아이템으로 변경
-										use_item[copy_item_num[i]] = player[j].item;
-
-										//플레이어의 아이템을 변경
-										player[j].item = use_item[copy_item_num[j]];
-										player[i].item = use_item[copy_item_num[i]];
-										status_pluse(copy_item_num[j], j);
-										status_pluse(copy_item_num[i], i);
-
-									}
-									//상대가 아이템이 없을때
-									else {
-										printf("교환 실패");
-									}
-								}
-								//플레이어 아이템이 없으면
-								else if((player[j].hasitem == FALSE)){
-									//상대가 아이템이 있을때
-									if (player[i].hasitem == TRUE) {
-										status_subtraction(copy_item_num[i], i);
-										copy_item_num[j] = copy_item_num[i];
-										player[i].hasitem = FALSE;
-										player[j].hasitem = TRUE;
-										player[j].item = use_item[copy_item_num[j]];
-										player[j].stamina = player[j].stamina - 40;
-										status_pluse(copy_item_num[j], j);
-										printf("강탈 성공");
-									}
-									//상대가 아이템이 없을때
-									else {
-										printf("강탈 실패");
-									}
-								}
-							}
-							else {//실패
-								player[j].stamina = player[j].stamina - 60;
-								printf("힘부족");
-							}
-						}
-						else {
-							printf("스테미나 부족");
-						}
-					}
-					else if (num == 2) {
-						//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-						if (player[j].stamina > 0) {
-							if (player[j].intel > player[i].intel) {
-								//성공
-								//플레이어가 아이템이 있으면 
-								if (player[j].hasitem == TRUE) {
-									//상대가 아이템이 있을때
-									if (player[i].hasitem == TRUE) {
-										player[j].stamina = player[j].stamina - 20;
-
-										status_subtraction(copy_item_num[j], j);
-										status_subtraction(copy_item_num[i], i);
-										//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-										use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
-
-										//먹은 아이템을 플레이어가 가진 아이템으로 변경
-										use_item[copy_item_num[i]] = player[j].item;
-
-										//플레이어의 아이템을 변경
-										player[j].item = use_item[copy_item_num[j]];
-										player[i].item = use_item[copy_item_num[i]];
-										status_pluse(copy_item_num[j], j);
-										status_pluse(copy_item_num[i], i);
-
-									}
-									//상대가 아이템이 없을때
-									else {
-										printf("교환 실패");
-									}
-								}
-								//플레이어 아이템이 없으면
-								else if ((player[j].hasitem == FALSE)) {
-									//상대가 아이템이 있을때
-									if (player[i].hasitem == TRUE) {
-										status_subtraction(copy_item_num[i], i);
-										copy_item_num[j] = copy_item_num[i];
-										player[i].hasitem = FALSE;
-										player[j].hasitem = TRUE;
-										player[j].item = use_item[copy_item_num[j]];
-										player[j].stamina = player[j].stamina - 20;
-										status_pluse(copy_item_num[j], j);
-										printf("강탈 성공");
-									}
-									//상대가 아이템이 없을때
-									else {
-										printf("강탈 실패");
-									}
-								}
-							}
-							else {//실패
-								player[j].stamina = player[j].stamina - 40;
-								printf("지능부족");
-							}
-						}
-						else {
-							printf("스테미나 부족");
-						}
-					}
-
-					//다시 묻지 않기 위해
-					ask_num[i] = TRUE;
+					select_1(num, j, i);
+	
 				}
 
 				else if(ask_num[i] == FALSE){
 					gotoxy(N_ROW + 2, 0);
-					printf(" %d번 %d랑 마주침", j, i);
+					
 					//다른 플레이어들
 					//한명만 무기가 있는 상황
-					num_1 = randint(1, 6);
+					num_1 = randint(1, 4);
 					if (player[i].hasitem == TRUE && player[j].hasitem == FALSE || player[i].hasitem == FALSE && player[j].hasitem == TRUE) {
-						if (player[i].hasitem == TRUE) {
-							if (num_1 == 1) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[i].stamina > 0) {
-									if (player[i].str > player[j].str) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[i].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												player[i].stamina = player[i].stamina - 40;
-
-												status_subtraction(copy_item_num[i], i);
-												status_subtraction(copy_item_num[j], j);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[i]] = use_item[copy_item_num[j]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[j]] = player[i].item;
-
-												//플레이어의 아이템을 변경
-												player[i].item = use_item[copy_item_num[i]];
-												player[j].item = use_item[copy_item_num[j]];
-												status_pluse(copy_item_num[i], i);
-												status_pluse(copy_item_num[j], j);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[i].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												status_subtraction(copy_item_num[j], j);
-												copy_item_num[i] = copy_item_num[j];
-												player[j].hasitem = FALSE;
-												player[i].hasitem = TRUE;
-												player[i].item = use_item[copy_item_num[i]];
-												player[i].stamina = player[i].stamina - 40;
-												status_pluse(copy_item_num[i], i);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[i].stamina = player[i].stamina - 60;
-										printf("힘부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-							else if (num_1 == 2) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[i].stamina > 0) {
-									if (player[i].intel > player[j].intel) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[i].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												player[i].stamina = player[i].stamina - 20;
-
-												status_subtraction(copy_item_num[j], j);
-												status_subtraction(copy_item_num[i], i);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[i]] = use_item[copy_item_num[j]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[j]] = player[i].item;
-
-												//플레이어의 아이템을 변경
-												player[i].item = use_item[copy_item_num[i]];
-												player[j].item = use_item[copy_item_num[j]];
-												status_pluse(copy_item_num[j], j);
-												status_pluse(copy_item_num[i], i);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[i].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												status_subtraction(copy_item_num[j], j);
-												copy_item_num[i] = copy_item_num[j];
-												player[j].hasitem = FALSE;
-												player[i].hasitem = TRUE;
-												player[i].item = use_item[copy_item_num[i]];
-												player[i].stamina = player[i].stamina - 20;
-												status_pluse(copy_item_num[i], i);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[i].stamina = player[i].stamina - 40;
-										printf("지능부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-
-							//다시 묻지 않기 위해/////////////////
-							ask_num[j] = TRUE;
+						if (player[i].hasitem == TRUE ) {
+							printf(" %d번 %d랑 마주침   ", i, j);
+							select_1(num_1, i, j);
+							
 						}
-						else if (player[j].hasitem == TRUE) {
-							if (num_1 == 1) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[j].stamina > 0) {
-									if (player[j].str > player[i].str) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[j].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												player[j].stamina = player[j].stamina - 40;
-
-												status_subtraction(copy_item_num[j], j);
-												status_subtraction(copy_item_num[i], i);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[i]] = player[j].item;
-
-												//플레이어의 아이템을 변경
-												player[j].item = use_item[copy_item_num[j]];
-												player[i].item = use_item[copy_item_num[i]];
-												status_pluse(copy_item_num[j], j);
-												status_pluse(copy_item_num[i], i);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[j].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												status_subtraction(copy_item_num[i], i);
-												copy_item_num[j] = copy_item_num[i];
-												player[i].hasitem = FALSE;
-												player[j].hasitem = TRUE;
-												player[j].item = use_item[copy_item_num[j]];
-												player[j].stamina = player[j].stamina - 40;
-												status_pluse(copy_item_num[j], j);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[j].stamina = player[j].stamina - 60;
-										printf("힘부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-							else if (num_1 == 2) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[j].stamina > 0) {
-									if (player[j].intel > player[i].intel) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[j].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												player[j].stamina = player[j].stamina - 20;
-
-												status_subtraction(copy_item_num[j], j);
-												status_subtraction(copy_item_num[i], i);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[i]] = player[j].item;
-
-												//플레이어의 아이템을 변경
-												player[j].item = use_item[copy_item_num[j]];
-												player[i].item = use_item[copy_item_num[i]];
-												status_pluse(copy_item_num[j], j);
-												status_pluse(copy_item_num[i], i);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[j].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												status_subtraction(copy_item_num[i], i);
-												copy_item_num[j] = copy_item_num[i];
-												player[i].hasitem = FALSE;
-												player[j].hasitem = TRUE;
-												player[j].item = use_item[copy_item_num[j]];
-												player[j].stamina = player[j].stamina - 20;
-												status_pluse(copy_item_num[j], j);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[j].stamina = player[j].stamina - 40;
-										printf("지능부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-
-							//다시 묻지 않기 위해
-							ask_num[j] = TRUE;
+						else if (player[j].hasitem == TRUE ) {
+							printf(" %d번 %d랑 마주침   ", j, i);
+							select_1(num_1, j, i);
+							
 						}
 					}
 					//둘다 무기가 있는 상황
 					else if (player[i].hasitem == TRUE && player[j].hasitem == TRUE || player[i].hasitem == FALSE && player[j].hasitem == FALSE) {
 						//둘다 무기가 있거나 없는 상황에서 플레이어 번호가 더 큰순이 결정
-						if (i > j) {
-							if (num_1 == 1) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[i].stamina > 0) {
-									if (player[i].str > player[j].str) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[i].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												player[i].stamina = player[i].stamina - 40;
-
-												status_subtraction(copy_item_num[i], i);
-												status_subtraction(copy_item_num[j], j);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[i]] = use_item[copy_item_num[j]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[j]] = player[i].item;
-
-												//플레이어의 아이템을 변경
-												player[i].item = use_item[copy_item_num[i]];
-												player[j].item = use_item[copy_item_num[j]];
-												status_pluse(copy_item_num[i], i);
-												status_pluse(copy_item_num[j], j);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[i].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												status_subtraction(copy_item_num[j], j);
-												copy_item_num[i] = copy_item_num[j];
-												player[j].hasitem = FALSE;
-												player[i].hasitem = TRUE;
-												player[i].item = use_item[copy_item_num[i]];
-												player[i].stamina = player[i].stamina - 40;
-												status_pluse(copy_item_num[i], i);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[i].stamina = player[i].stamina - 60;
-										printf("힘부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-							else if (num_1 == 2) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[i].stamina > 0) {
-									if (player[i].intel > player[j].intel) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[i].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												player[i].stamina = player[i].stamina - 20;
-
-												status_subtraction(copy_item_num[j], j);
-												status_subtraction(copy_item_num[i], i);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[i]] = use_item[copy_item_num[j]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[j]] = player[i].item;
-
-												//플레이어의 아이템을 변경
-												player[i].item = use_item[copy_item_num[i]];
-												player[j].item = use_item[copy_item_num[j]];
-												status_pluse(copy_item_num[j], j);
-												status_pluse(copy_item_num[i], i);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[i].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[j].hasitem == TRUE) {
-												status_subtraction(copy_item_num[j], j);
-												copy_item_num[i] = copy_item_num[j];
-												player[j].hasitem = FALSE;
-												player[i].hasitem = TRUE;
-												player[i].item = use_item[copy_item_num[i]];
-												player[i].stamina = player[i].stamina - 20;
-												status_pluse(copy_item_num[i], i);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[i].stamina = player[i].stamina - 40;
-										printf("지능부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-
-							//다시 묻지 않기 위해/////////////////
-							ask_num[j] = TRUE;
+						if (i > j ) {
+							printf(" %d번 %d랑 마주침   ", i, j);
+							select_1(num_1, i, j);
+							
 						}
-						else if (j > i) {
-							if (num_1 == 1) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[j].stamina > 0) {
-									if (player[j].str > player[i].str) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[j].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												player[j].stamina = player[j].stamina - 40;
-
-												status_subtraction(copy_item_num[j], j);
-												status_subtraction(copy_item_num[i], i);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[i]] = player[j].item;
-
-												//플레이어의 아이템을 변경
-												player[j].item = use_item[copy_item_num[j]];
-												player[i].item = use_item[copy_item_num[i]];
-												status_pluse(copy_item_num[j], j);
-												status_pluse(copy_item_num[i], i);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[j].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												status_subtraction(copy_item_num[i], i);
-												copy_item_num[j] = copy_item_num[i];
-												player[i].hasitem = FALSE;
-												player[j].hasitem = TRUE;
-												player[j].item = use_item[copy_item_num[j]];
-												player[j].stamina = player[j].stamina - 40;
-												status_pluse(copy_item_num[j], j);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[j].stamina = player[j].stamina - 60;
-										printf("힘부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-							else if (num_1 == 2) {
-								//강탈 선택시 힘 비교 (스테미나가 0보다 크면) 
-								if (player[j].stamina > 0) {
-									if (player[j].intel > player[i].intel) {
-										//성공
-										//플레이어가 아이템이 있으면 
-										if (player[j].hasitem == TRUE) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												player[j].stamina = player[j].stamina - 20;
-
-												status_subtraction(copy_item_num[j], j);
-												status_subtraction(copy_item_num[i], i);
-												//즉 사용자가 먹은 아이템의 번호를 가지고와 아이템을 먹은 아이템으로 변경
-												use_item[copy_item_num[j]] = use_item[copy_item_num[i]];
-
-												//먹은 아이템을 플레이어가 가진 아이템으로 변경
-												use_item[copy_item_num[i]] = player[j].item;
-
-												//플레이어의 아이템을 변경
-												player[j].item = use_item[copy_item_num[j]];
-												player[i].item = use_item[copy_item_num[i]];
-												status_pluse(copy_item_num[j], j);
-												status_pluse(copy_item_num[i], i);
-
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("교환 실패");
-											}
-										}
-										//플레이어 아이템이 없으면
-										else if ((player[j].hasitem == FALSE)) {
-											//상대가 아이템이 있을때
-											if (player[i].hasitem == TRUE) {
-												status_subtraction(copy_item_num[i], i);
-												copy_item_num[j] = copy_item_num[i];
-												player[i].hasitem = FALSE;
-												player[j].hasitem = TRUE;
-												player[j].item = use_item[copy_item_num[j]];
-												player[j].stamina = player[j].stamina - 20;
-												status_pluse(copy_item_num[j], j);
-												printf("강탈 성공");
-											}
-											//상대가 아이템이 없을때
-											else {
-												printf("강탈 실패");
-											}
-										}
-									}
-									else {//실패
-										player[j].stamina = player[j].stamina - 40;
-										printf("지능부족");
-									}
-								}
-								else {
-									printf("스테미나 부족");
-								}
-							}
-
-							//다시 묻지 않기 위해
-							ask_num[i] = TRUE;
+						else if (j > i ) {
+							printf(" %d번 %d랑 마주침   ", j, i);
+							select_1(num_1, j, i);
+							
 						}
 					}
 				}
-
+				
 
 			}
 		}

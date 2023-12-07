@@ -71,12 +71,13 @@ void draw(void) {
 
 void print_status(void) {
 	printf("no. of players left: %d\n", n_player);
+	printf("번호   살아있는가 이름 지능 힘 스테미나  \n");
 	for (int i = 0; i < n_player; i++) {
 		if (player[i].hasitem == TRUE) {
-			printf("player %s: %d   %d   %d  item: %s         \n", player[i].name, player[i].intel, player[i].str, player[i].stamina,player[i].item.name);
+			printf("player[%d] %5s %5s: %2d  %2d  %3d item: %5s   \n",i, player[i].is_alive ? "alive" : "DEAD" ,player[i].name, player[i].intel, player[i].str, player[i].stamina,player[i].item.name);
 		}
 		else {
-			printf("player %s: %d   %d  %d                    \n", player[i].name, player[i].intel, player[i].str, player[i].stamina);
+			printf("player[%d] %5s %5s:  %2d  %2d  %3d      \n",i, player[i].is_alive ? "alive" : "DEAD", player[i].name, player[i].intel, player[i].str, player[i].stamina);
 		}
 		
 	}
