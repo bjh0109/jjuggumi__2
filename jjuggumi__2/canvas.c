@@ -150,8 +150,8 @@ void print_status_1(void) {
 	printf("no. of players left: %d\n", n_alive);
 	for (int p = 0; p < n_player; p++) {
 		if (player[p].is_alive || jul_fal[p] == true) {
-			printf("player %2d: %5s %d(+%d) %d(+%d) %.1f(%d)\n",
-				p, player[p].is_alive ? "alive" : jul_fal[p] ? "alive*" : "DEAD", player[p].intel, player[p].item.intel_buf, player[p].str, player[p].item.str_buf, player[p].stamina, player[p].item.stamina_buf);
+			printf("player %2d: %5s \n",
+				p, player[p].is_alive ? "alive" : jul_fal[p] ? "alive*" : "DEAD");
 		}
 	}
 }
